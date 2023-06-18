@@ -1,0 +1,58 @@
+- name: Update APT package manager
+  ansible.builtin.apt:
+    name: aptitude
+    state: latest
+    update_cache: true
+
+- name: Install prerequisite packages 
+  apt:
+    name: 
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python-apt
+      - python3-apt
+      - python3-pip # Additional package to install pip manager for Docker compose installation
+    state: latest
+    update_cache: True
+
+- name: Add Docker GPG apt key
+  ansible.builtin.apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: Add Docker repository to APT
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+# Check if Docker Compose is already installed
+- name: Check if Docker Compose is installed
+  ansible.builtin.command: docker-compose version
+  register: docker_compose_output
+  ignore_errors: true
+
+- name: Print Docker Compose version
+  ansible.builtin.debug:
+    var: docker_compose_output.stdout_lines
+  when: docker_compose_output.rc == 0
+
+#Install Docker-compose 
+- name: Install docker-compose
+  ansible.builtin.apt:
+    name: docker-compose
+    state: latest
+    update_cache: true
+  when: docker_compose_output.rc != 0
+
+- name: Install docker-ce
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: true
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin

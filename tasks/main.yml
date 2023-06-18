@@ -1,0 +1,10 @@
+# tasks file for ansible-nodejs-forum
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: install-docker.yml
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: docker-post-installation.yml
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: application-install.yml
