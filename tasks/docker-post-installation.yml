@@ -8,7 +8,3 @@
    name: ubuntu
    group: docker
    append: true
-
-# https://serverfault.com/a/930806
-#- name: Reset ssh connection to allow user changes to affect ansible user
-#  ansible.builtin.meta: reset_connection

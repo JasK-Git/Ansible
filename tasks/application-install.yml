@@ -1,12 +1,21 @@
+# Use this file if you wish to install your application manually, without using docker module
+
+#create a new directory
+- name: Create a directory www in root
+  ansible.builtin.file:
+    path: /www
+    state: directory
+    mode: '0755'
+
 # Checkout the git repo for the application
 - name: checkout the git repo on the hosts
   ansible.builtin.git:
-    repo: 'https://github.com/Jasleenkaurnotay/ansible-role-docker.git'
-    dest: /home/ubuntu/nodejs-react-forum
+    repo: 'https://github.com/Jasleenkaurnotay/nodejs-react-forum.git'
+    dest: /www/nodejs-react-forum
     clone: yes 
 
 # Change directory to the Git repo and start the application using docker-compose
 - name: Change working directory and run application
   command:
     cmd: docker compose up -d 
-    chdir: /home/ubuntu/nodejs-react-forum
+    chdir: /www/nodejs-react-forum

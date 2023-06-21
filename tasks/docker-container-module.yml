@@ -1,0 +1,26 @@
+#Installing application using docker-module, remember to comment out the application-install.yml file if using this file
+- name: use docker images to build container
+  community.docker.docker_container:
+    name: db
+    image: mongo:4.2.24
+    env:
+      MONGO_INITDB_ROOT_USERNAME: "AdminSammy"
+      MONGO_INITDB_ROOT_PASSWORD: "password1!"
+      
+- name: create server container and connect to db
+  community.docker.docker_container:
+    name: server
+    image: jaskdocker/forum-app:server
+    links:
+      - "db:sevdb"
+
+- name: create client container and connect to server
+  community.docker.docker_container:
+    name: client
+    image: jaskdocker/forum-app:frontend
+    links:
+      - "server:sevfe"
+    ports:
+      - "3000:3000"
+
+
